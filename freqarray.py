@@ -34,6 +34,7 @@ def gen_freq_array(alphabet, k):
         temp = ''
 
     #print(mylist)
+    mylist.sort()
 
     #mydict = { mylist[i]:0 for i in range(len(mylist)) }
     mydict = { mylist[i]:(i,0) for i in range(len(mylist)) }
