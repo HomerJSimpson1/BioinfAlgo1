@@ -167,5 +167,91 @@ def freq_array(genome, alphabet, k):
 
     find_frequencies(genome, myfreqdict, k)
     #print(myfreqdict)
+
+    print_freq_array(myfreqdict)
     
     return(myfreqdict)
+
+
+def print_freq_array(myfreqdict):
+    """
+    Helper function to print the frequencies in order of the index.
+    Input: myfreqdict, a dictionary that represents a "frequency array."
+    Output: Returns nothing, but prints the frequencies associated with each possible k-mer, in
+    the order of the k-mer's index in the frequency array.
+    """
+    # for val in myfreqdict:
+    #     print(myfreqdict[val].[1])
+
+    freqlist = [ myfreqdict[val] for val in myfreqdict ]
+    freqlist.sort()
+
+    for val in freqlist:
+        print(val[1])
+
+
+
+def convert_pattern_to_number(pattern):
+    """
+    DNA String pattern converter that uses the idea that it is the same as converting
+    from base 4 to base 10, and treating 'A'=0, 'C'=1, 'G'=2, 'T'=3.
+    Input: Pattern, a pattern of DNA symbols.
+    Output: The index of the pattern in the lexicographically-ordered frequency array.
+    """
+
+    alphadict = {'A':0, 'C':1, 'G':2, 'T':3}
+
+    patlist = [ alphadict[symbol] for symbol in pattern ]
+    
+    j = 0
+    num = 0
+
+    for i in range(-1, -(len(patlist) + 1), -1):
+        # Go through each digit, in reverse order (i.e. starting from the right and going
+        # left), and multiply each successive digit by an increasing power of 4 (which is
+        # the size of the alphabet).
+        num += 4**j * patlist[i]
+        #print(patlist[i], j, num)
+        j += 1
+
+    return(num)
+        
+
+def convert_number_to_pattern(num, k):
+    """
+    Converts a number to a pattern.  Successively divide num by 4 and get each remainder.
+    The remainder (i.e. mod 4) yields each successive symbol in pattern, starting from
+    the right side of pattern.
+    This process is equivalent to converting from base 10 to base 4, and then using the
+    symbols in alphadict to convert from numbers to digits.
+    Input: num, a number to convert into a DNA String pattern, and k, the length of the string.
+    Output: The pattern represented by num.
+    """
+    numalphadict = {0:'A', 1:'C', 2:'G', 3:'T'}
+
+    #quotient = len(str(num))
+    quotient = num / 4
+    remainderlist = []
+
+    while (num > 0):
+        #quotient = num / 4
+        remainder = num % 4
+        #print(quotient, remainder)
+        remainderlist.append(remainder)
+        quotient = num / 4
+        num = int(quotient)
+
+    #print(len(remainderlist), k)
+
+    #while (len(remainderlist) <= k):
+    while (len(remainderlist) < k):
+        #print("Appending A's")
+        remainderlist.append(0)
+
+    remainlist = [ str(numalphadict[item]) for item in remainderlist ]
+    remainlist.reverse()
+    pattern = ''.join(remainlist)
+
+    return(pattern)
+
+    
